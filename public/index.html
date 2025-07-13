@@ -1172,7 +1172,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                     </div>
                     
                     <div style="margin-top: 30px; display: flex; justify-content: flex-end;">
-                        <button class="verification-btn" style="padding: 12px 30px;">Read Full Story</button>
+                        <a href="https://www.islamicity.org/104341/the-battle-of-badr-a-victory-that-shaped-the-muslim-ummah/" class="read-more" style="font-size: 1.1rem; padding: 14px 32px; border-radius: 30px; background: var(--islamic-amber-light); color: var(--islamic-gold); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--islamic-gold); transition: all 0.3s ease;">
+                            Read More <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1180,7 +1182,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             <div class="history-grid">
                 <!-- History Card 1 -->
                 <div class="history-card">
-                    <img src="https://images.unsplash.com/photo-1611492226957-64b84a2b3a4b?q=80&w=600" alt="Al-Khwarizmi" class="article-image">
+                    <img src="https://static.wixstatic.com/media/7335d9_e34e526af6834fbb8378ace59f3f1110~mv2.jpeg/v1/fill/w_1000,h_563,al_c,q_85,usm_0.66_1.00_0.01/7335d9_e34e526af6834fbb8378ace59f3f1110~mv2.jpeg" alt="Al-Khwarizmi" class="article-image">
                     <div class="article-content">
                         <div class="article-meta">
                             <span class="article-category">Science & Knowledge</span>
@@ -1197,21 +1199,21 @@ document.addEventListener('DOMContentLoaded', async function() {
                             <div class="comments-count">
                                 <i class="far fa-comment"></i> 14 comments
                             </div>
-                            <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                            <a href="https://www.islamicity.org/9540/science-golden-age-al-khwarizmi-father-algebra/" class="read-more" target="_blank">Read More <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
                 
                 <!-- History Card 2 -->
                 <div class="history-card">
-                    <img src="https://images.unsplash.com/photo-1589561084280-1e5d5aae3b2a?q=80&w=600" alt="Ottoman Empire" class="article-image">
+                    <img src="https://www.islamicity.org/wp-content/plugins/blueprint-timthumb/timthumb.php?src=https://media.islamicity.org/wp-content/uploads/2025/03/dubai-mosque.jpg&w=1200&h=675&q=100" alt="Ottoman Empire" class="article-image">
                     <div class="article-content">
                         <div class="article-meta">
                             <span class="article-category">Empires & Dynasties</span>
                             <span class="article-date">Ottoman Era</span>
                         </div>
-                        <h3 class="article-title">Suleiman the Magnificent: Golden Age</h3>
-                        <p class="article-desc">The longest-reigning Sultan who transformed the Ottoman Empire into a global power.</p>
+                        <h3 class="article-title">The Ottomans: A Cultural Legacy</h3>
+                        <p class="article-desc">The Ottoman Empire, often remembered for its imposing presence in history and its legacy in architectural marvels like the mosques of Istanbul, had a far more complex and cosmopolitan identity than many realize.</p>
                         <div class="sources">
                             <div class="source-badge">
                                 <i class="fas fa-check-circle"></i> Verified
@@ -1221,14 +1223,14 @@ document.addEventListener('DOMContentLoaded', async function() {
                             <div class="comments-count">
                                 <i class="far fa-comment"></i> 22 comments
                             </div>
-                            <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                            <a href="https://www.islamicity.org/103791/the-ottomans-a-cultural-legacy/" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
                 
                 <!-- History Card 3 -->
                 <div class="history-card">
-                    <img src="https://images.unsplash.com/photo-1599824701188-259f5a9d9d25?q=80&w=600" alt="Islamic Scholars" class="article-image">
+                    <img src="https://www.islamicity.org/wp-content/plugins/blueprint-timthumb/timthumb.php?src=https://media.islamicity.org/wp-content/uploads/2020/09/house-of-wisdom-01.jpg&w=1200&h=675&q=100" alt="Islamic Scholars" class="article-image">
                     <div class="article-content">
                         <div class="article-meta">
                             <span class="article-category">Science & Knowledge</span>
@@ -1245,7 +1247,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                             <div class="comments-count">
                                 <i class="far fa-comment"></i> 18 comments
                             </div>
-                            <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                            <a href="https://www.islamicity.org/60008/baghdad-the-house-of-wisdom-bayt-al-hikmah/" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -1635,5 +1637,51 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Example: call setUserInputText('Neuralink') to trigger Gemini
     // No need to auto-trigger on DOMContentLoaded for verification tab
     </script>
+
+<!--
+IsnadHub Website Summary
+
+Overview
+IsnadHub is a modern, responsive web platform for verified news, Islamic history, and AI-powered article verification. It combines live news feeds, historical content, and advanced AI tools to help users access, verify, and explore information from an Islamic perspective.
+
+Key Features & How It Works
+
+1. News Feed (Current News Tab)
+   - Endless Article Cards: The site fetches news articles from a backend /news API (which likely proxies NewsAPI or similar). Articles are displayed as cards with images, titles, descriptions, source, and publication date.
+   - Infinite Scroll: As users scroll, more articles are loaded automatically, creating a seamless browsing experience.
+   - Bookmarking: Users can bookmark articles for later, toggling the icon on each card.
+
+2. Islamic History (History Tab)
+   - Featured Story: A highlighted historical event is shown with an image, description, and sources.
+   - History Cards: Additional historical figures/events are displayed as cards, each with an image, summary, and verification status.
+   - Category Tabs: Users can filter history content by categories like Battles, Science, Prophetic Stories, etc.
+
+3. AI Verification (Verification Tab)
+   - URL Submission: Users can enter a news/article URL to check its Islamic accuracy.
+   - Web Scraper: The site uses AllOrigins (https://allorigins.win/) to fetch and parse the article’s content, title, publisher, and date.
+   - Gemini AI Integration: The scraped article is sent to Google Gemini AI with a detailed system prompt. Gemini analyzes the article for Islamic accuracy, provides a summary, Islamic perspective, historical parallels, and recommendations.
+   - Formatted Results: The AI’s response is parsed and displayed with clear headers, sections, and styled text for readability.
+
+4. Account Tab
+   - User Profile: Displays user info, stats (articles read, history explored, saved items, comments), and saved/bookmarked items.
+   - Google OAuth: Users can sign in with Google for a personalized experience.
+
+5. Navigation & Design
+   - Responsive Layout: The site is mobile-friendly and adapts to different screen sizes.
+   - Bottom Navigation: Persistent tab bar for quick access to News, History, Verification, and Account sections.
+   - Modern Islamic Theme: Uses a gold/green/amber color palette, custom icons, and subtle patterns for a distinctive look.
+
+Technical Highlights
+- Frontend: Pure HTML, CSS, and vanilla JavaScript (no frameworks).
+- APIs:
+  - News fetched from /news endpoint (server-side API).
+  - Article scraping via AllOrigins.
+  - AI analysis via Google Gemini API.
+- Dynamic Content: All main sections (news, history, verification) are dynamically populated and updated based on user interaction and API responses.
+- Accessibility: Uses semantic HTML, clear headings, and accessible color contrasts.
+
+In summary:
+IsnadHub is a feature-rich, user-friendly platform that combines live news, Islamic history, and AI-powered verification to empower users with trustworthy, Islamically grounded information—all in a visually appealing and interactive interface.
+-->
 </body>
 </html>
