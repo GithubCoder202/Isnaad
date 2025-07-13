@@ -984,9 +984,9 @@
                     </div>
                 </div>
                 
-                <div class="search-bar">
+                <div class="search-bar" id="news-search-bar">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search news, history...">
+                    <input type="text" placeholder="Search news..." id="news-search-input">
                 </div>
                 
                 <div class="user-actions">
@@ -1107,28 +1107,7 @@ async function loadArticles(page = 1) {
   return 0;
 }
 
-// Infinite scroll
-let currentPage = 1;
-let loading = false;
-let allLoaded = false;
-
-async function handleScroll() {
-  if (loading || allLoaded) return;
-  const grid = document.getElementById('articles-grid');
-  const rect = grid.getBoundingClientRect();
-  if (rect.bottom < window.innerHeight + 200) {
-    loading = true;
-    const loaded = await loadArticles(++currentPage);
-    if (!loaded) allLoaded = true;
-    loading = false;
-  }
-}
-
-document.addEventListener('DOMContentLoaded', async function() {
-  // Initial load
-  await loadArticles(currentPage);
-  window.addEventListener('scroll', handleScroll);
-});
+// Infinite scroll variables and handler are now declared only once below
 </script>
         </div>
         
@@ -1136,12 +1115,18 @@ document.addEventListener('DOMContentLoaded', async function() {
         <div id="history-tab" class="tab-content">
             <div class="section-title">
                 <h2>Islamic History</h2>
-                <div class="category-tabs">
-                    <div class="category-tab active">All</div>
-                    <div class="category-tab">Battles & Conquests</div>
-                    <div class="category-tab">Science & Knowledge</div>
-                    <div class="category-tab">Prophetic Stories</div>
-                    <div class="category-tab">Empires & Dynasties</div>
+                <div style="display: flex; gap: 16px; align-items: center; width: 100%;">
+                    <div class="category-tabs" style="flex: 1 1 auto;">
+                        <div class="category-tab active">All</div>
+                        <div class="category-tab">Battles & Conquests</div>
+                        <div class="category-tab">Science & Knowledge</div>
+                        <div class="category-tab">Prophetic Stories</div>
+                        <div class="category-tab">Empires & Dynasties</div>
+                    </div>
+                    <div class="search-bar" id="history-search-bar" style="max-width: 300px; min-width: 180px;">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search history..." id="history-search-input">
+                    </div>
                 </div>
             </div>
             
@@ -1203,7 +1188,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                         </div>
                     </div>
                 </div>
-                
                 <!-- History Card 2 -->
                 <div class="history-card">
                     <img src="https://www.islamicity.org/wp-content/plugins/blueprint-timthumb/timthumb.php?src=https://media.islamicity.org/wp-content/uploads/2025/03/dubai-mosque.jpg&w=1200&h=675&q=100" alt="Ottoman Empire" class="article-image">
@@ -1227,7 +1211,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                         </div>
                     </div>
                 </div>
-                
                 <!-- History Card 3 -->
                 <div class="history-card">
                     <img src="https://www.islamicity.org/wp-content/plugins/blueprint-timthumb/timthumb.php?src=https://media.islamicity.org/wp-content/uploads/2020/09/house-of-wisdom-01.jpg&w=1200&h=675&q=100" alt="Islamic Scholars" class="article-image">
@@ -1251,6 +1234,145 @@ document.addEventListener('DOMContentLoaded', async function() {
                         </div>
                     </div>
                 </div>
+            </div>
+<script>
+// --- News Tab Search ---
+let allNewsArticles = [];
+function createArticleCard(article) {
+  const imageUrl = article.urlToImage || 'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?q=80&w=600';
+  return `
+    <div class="article-card">
+      <div style="position: relative;">
+        <img src="${imageUrl}" alt="${article.title}" class="article-image">
+        <button class="bookmark-btn"><i class="far fa-bookmark"></i></button>
+      </div>
+      <div class="article-content">
+        <div class="article-meta">
+          <span class="article-category">${article.source?.name || 'News'}</span>
+          <span class="article-date">${article.publishedAt ? new Date(article.publishedAt).toLocaleString() : ''}</span>
+        </div>
+        <h3 class="article-title">${article.title}</a></h3>
+        <p class="article-desc">${article.description || ''}</p>
+        <div class="article-footer">
+          <a href="${article.url}" class="read-more" target="_blank">Read More <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function loadArticles(page = 1, append = true) {
+  const grid = document.getElementById('articles-grid');
+  try {
+    const response = await fetch(`/news?page=${page}`);
+    const data = await response.json();
+    if (data.articles && data.articles.length > 0) {
+      if (!append) grid.innerHTML = '';
+      data.articles.forEach(article => {
+        if (!allNewsArticles.some(a => a.url === article.url)) {
+          allNewsArticles.push(article);
+        }
+        if (append) grid.insertAdjacentHTML('beforeend', createArticleCard(article));
+      });
+      return data.articles.length;
+    }
+  } catch (e) {
+    if (grid.childElementCount === 0) {
+      grid.innerHTML = '<p>No articles found.</p>';
+    }
+  }
+  return 0;
+}
+
+function filterNewsArticles(query) {
+  const grid = document.getElementById('articles-grid');
+  grid.innerHTML = '';
+  const filtered = allNewsArticles.filter(article => {
+    const q = query.toLowerCase();
+    return (
+      (article.title && article.title.toLowerCase().includes(q)) ||
+      (article.description && article.description.toLowerCase().includes(q)) ||
+      (article.source?.name && article.source.name.toLowerCase().includes(q))
+    );
+  });
+  if (filtered.length === 0) {
+    grid.innerHTML = '<p>No articles found.</p>';
+  } else {
+    filtered.forEach(article => grid.insertAdjacentHTML('beforeend', createArticleCard(article)));
+  }
+}
+
+// Infinite scroll
+let currentPage = 1;
+let loading = false;
+let allLoaded = false;
+
+async function handleScroll() {
+  if (loading || allLoaded) return;
+  const grid = document.getElementById('articles-grid');
+  const rect = grid.getBoundingClientRect();
+  if (rect.bottom < window.innerHeight + 200) {
+    loading = true;
+    const loaded = await loadArticles(++currentPage);
+    if (!loaded) allLoaded = true;
+    loading = false;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+  // Initial load
+  await loadArticles(currentPage);
+  window.addEventListener('scroll', handleScroll);
+  // News search bar
+  const newsSearch = document.getElementById('news-search-input');
+  if (newsSearch) {
+    newsSearch.addEventListener('input', function() {
+      filterNewsArticles(this.value);
+    });
+  }
+});
+
+// --- History Tab Search ---
+function filterHistoryCards(query) {
+  const cards = document.querySelectorAll('#history-tab .history-card');
+  let anyVisible = false;
+  cards.forEach(card => {
+    const title = card.querySelector('.article-title')?.textContent.toLowerCase() || '';
+    const desc = card.querySelector('.article-desc')?.textContent.toLowerCase() || '';
+    const category = card.querySelector('.article-category')?.textContent.toLowerCase() || '';
+    const q = query.toLowerCase();
+    if (title.includes(q) || desc.includes(q) || category.includes(q)) {
+      card.style.display = '';
+      anyVisible = true;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+  // Optionally show a message if nothing is found
+  const grid = document.querySelector('#history-tab .history-grid');
+  if (!anyVisible && grid) {
+    if (!grid.querySelector('.no-history-msg')) {
+      const msg = document.createElement('div');
+      msg.className = 'no-history-msg';
+      msg.style = 'padding: 30px; color: #b91c1c; font-weight: 600;';
+      msg.textContent = 'No history found.';
+      grid.appendChild(msg);
+    }
+  } else if (grid) {
+    const msg = grid.querySelector('.no-history-msg');
+    if (msg) msg.remove();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const historySearch = document.getElementById('history-search-input');
+  if (historySearch) {
+    historySearch.addEventListener('input', function() {
+      filterHistoryCards(this.value);
+    });
+  }
+});
+</script>
             </div>
         </div>
         
