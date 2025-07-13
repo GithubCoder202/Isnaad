@@ -1410,29 +1410,46 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 <script>
     // AI Validation and Scraping
-    async function scrapeArticle() {
-      const url = document.getElementById('verification-url').value;
+
+    // Enhanced verifier: accepts both URLs and plain text
+    async function verifyInput() {
+      const input = document.getElementById('verification-url').value.trim();
       const output = document.getElementById('output');
-      try {
-        const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-        if (!response.ok) throw new Error('Failed to fetch article');
+      // Simple URL regex (http/https, at least one dot, no spaces)
+      const urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[^\s]*)?$/i;
+      if (!input) {
+        alert('Please enter a URL or paste article text.');
+        return;
+      }
+      // If input looks like a URL, try to scrape
+      if (urlPattern.test(input)) {
+        output.textContent = "Scraping... please wait.";
+        try {
+          const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(input)}`);
+          if (!response.ok) throw new Error('Failed to fetch article');
 
-        const data = await response.json();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(data.contents, 'text/html');
+          const data = await response.json();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(data.contents, 'text/html');
 
-        const title = doc.querySelector('meta[property="og:title"]')?.content || doc.title || 'Not found';
-        const publisher = doc.querySelector('meta[property="og:site_name"]')?.content || 'Unknown';
-        const published = doc.querySelector('meta[property="article:published_time"]')?.content || 'Unknown';
-        const article = doc.querySelector('article')?.innerText || 'Article content not found.';
+          const title = doc.querySelector('meta[property="og:title"]')?.content || doc.title || 'Not found';
+          const publisher = doc.querySelector('meta[property="og:site_name"]')?.content || 'Unknown';
+          const published = doc.querySelector('meta[property="article:published_time"]')?.content || 'Unknown';
+          const article = doc.querySelector('article')?.innerText || '';
 
-        // Compose the text to send to Gemini
-        const articleText = `Title: ${title}\nPublisher: ${publisher}\nPublished: ${published}\n\n${article.substring(0, 10000)}${article.length > 10000 ? '...\n(Content truncated)' : ''}`;
+          if (!article || article === 'Article content not found.') {
+            throw new Error('Could not extract article text. Please copy and paste the article text below.');
+          }
 
-        // Send to Gemini and display Gemini's response
-        await setUserInputText(articleText);
-      } catch (err) {
-        output.textContent = `❌ Error: ${err.message}`;
+          // Compose the text to send to Gemini
+          const articleText = `Title: ${title}\nPublisher: ${publisher}\nPublished: ${published}\n\n${article.substring(0, 10000)}${article.length > 10000 ? '...\n(Content truncated)' : ''}`;
+          await setUserInputText(articleText);
+        } catch (err) {
+          output.innerHTML = `<span style='color:red;'>❌ ${err.message}</span><br><br><b>Tip:</b> If this is a paywalled or unsupported site, please copy and paste the article text above and click Verify again.`;
+        }
+      } else {
+        // Treat as plain text, send directly to Gemini
+        await setUserInputText(input);
       }
     }
 
@@ -1493,12 +1510,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                 verifyBtn.addEventListener('click', async function() {
                     const urlInput = document.getElementById('verification-url');
                     if (!urlInput.value.trim()) {
-                        alert('Please enter a valid URL');
+                        alert('Please enter a URL or paste article text.');
                         return;
                     }
                     verificationSpinner.style.display = 'block';
                     verificationResult.style.display = 'block';
-                    await scrapeArticle();
+                    await verifyInput();
                     verificationSpinner.style.display = 'none';
                     verificationResult.style.display = 'block';
                 });
