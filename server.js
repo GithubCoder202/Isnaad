@@ -4,7 +4,8 @@ import fetch from 'node-fetch';
 const app = express();
 const PORT = 3000;
 
-const NEWS_API_KEY = '1c6eac1d3669492c9a66659171ad9d73';
+const mySecret = process.env["news"];
+const NEWS_API_KEY = mySecret;
 
 app.use(express.static('public')); // serve HTML from /public folder
 
