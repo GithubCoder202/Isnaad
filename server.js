@@ -1,15 +1,40 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import fetch from 'node-fetch';
+import bodyParser from 'body-parser';
 
 const app = express();
 const PORT = 3000;
 
-//process.env["news"];
+const NEWS_API_KEY = process.env.NEWSAPI;
+console.log(NEWS_API_KEY);
 
-const mySecret = '1c6eac1d3669492c9a66659171ad9d73';
-const NEWS_API_KEY = mySecret;
-
+app.use(bodyParser.json());
 app.use(express.static('public')); // serve HTML from /public folder
+
+// Gemini AI Proxy Endpoint
+app.post('/gemini', async (req, res) => {
+  const { contents, model } = req.body;
+  const GEMINI_API_KEY = process.env.GEMINIAPI;
+  if (!GEMINI_API_KEY) {
+    return res.status(500).json({ error: 'Gemini API key not set on server.' });
+  }
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${model || 'models/gemini-1.5-flash'}:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents })
+      }
+    );
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Gemini API error:', error);
+    res.status(500).json({ error: 'Error contacting Gemini API' });
+  }
+});
 
 app.get('/news', async (req, res) => {
   try {
