@@ -8,7 +8,7 @@ const app = express();
 const PORT = 3000;
 
 const NEWS_API_KEY = process.env.NEWSAPI;
-console.log(NEWS_API_KEY);
+console.log("Test: " + NEWS_API_KEY);
 
 app.use(bodyParser.json());
 app.use(express.static('public')); // serve HTML from /public folder
